@@ -1,0 +1,19 @@
+name: OreGenSimulator
+version: @version@-@apiversion@
+description: A plugin for checking ore gen values directly in Minecraft
+author: Dabsunter
+website: https://github.com/Dabsunter/oregen-simulator
+
+main: fr.dabsunter.oregensimulator.OreGenPlugin
+
+commands:
+  oregen:
+    description: Main command of OreGenSimulator
+    aliases: [og]
+    permission: oregen.command
+    usage: /<command> help
+
+permissions:
+  oregen.command:
+    description: Permission to use OreGenSimulator
+    default: op
