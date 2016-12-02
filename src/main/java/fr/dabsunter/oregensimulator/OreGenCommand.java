@@ -54,7 +54,7 @@ public class OreGenCommand implements CommandExecutor {
 		String[] message;
 		if (args.length == 1) {
 			message = new String[]{
-					" --- Help on \"/" + label + " commands ---",
+					" --- Help on \"/" + label + "\" commands ---",
 					"help - Ask for help on a command's usage",
 					"set - Update settings",
 					"generate - Generate ores with current settings",
