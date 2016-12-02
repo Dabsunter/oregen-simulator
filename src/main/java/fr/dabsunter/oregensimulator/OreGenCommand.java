@@ -51,8 +51,17 @@ public class OreGenCommand implements CommandExecutor {
 	}
 
 	private void helpCommand(Player player, String label, String[] args) {
-		if (args.length == 2) {
-			String[] message;
+		String[] message;
+		if (args.length == 1) {
+			message = new String[]{
+					" --- Help on \"/" + label + " commands ---",
+					"help - Ask for help on a command's usage",
+					"set - Update settings",
+					"generate - Generate ores with current settings",
+					"restore - Restore the destroyed chunks",
+					"info - Display current settings"
+			};
+		} else {
 			String header = " --- Help on \"/" + label + " " + args[1] + "\" command ---";
 			switch (args[1].toLowerCase()) {
 				case "help":
@@ -114,8 +123,8 @@ public class OreGenCommand implements CommandExecutor {
 							"Wait... this command does not exist x)"
 					};
 			}
-			player.sendMessage(message);
 		}
+		player.sendMessage(message);
 	}
 
 	private void setCommand(Player player, String label, String[] args) {
@@ -182,30 +191,31 @@ public class OreGenCommand implements CommandExecutor {
 
 	private void restoreCommand(Player player, String label, String[] args) {
 		if (args.length == 2 && args[1].equalsIgnoreCase("all")) {
+			player.sendMessage("Restoring all saved chunks...");
 			plugin.getChunkManager().restoreAll();
+			player.sendMessage("Done.");
 			return;
 		}
 
-		Chunk chunk;
-		if (args.length == 3) {
-			int x, z;
-			try {
-				x = Integer.parseInt(args[1]);
-				z = Integer.parseInt(args[2]);
-			} catch (NumberFormatException ex) {
-				player.sendMessage(ex.getMessage());
+		try {
+			Chunk chunk;
+			if (args.length == 3) {
+				int x = Integer.parseInt(args[1]);
+				int z = Integer.parseInt(args[2]);
+				chunk = player.getWorld().getChunkAt(x, z);
+			} else if (args.length == 1) {
+				chunk = player.getLocation().getChunk();
+			} else {
+				helpCommand(player, label, new String[]{"help", args[0]});
 				return;
 			}
-			chunk = player.getWorld().getChunkAt(x, z);
-		} else if (args.length == 1) {
-			chunk = player.getLocation().getChunk();
-		} else {
-			helpCommand(player, label, new String[]{"help", args[0]});
-			return;
-		}
 
-		player.sendMessage("Restoring chunk X:" + chunk.getX() + "/Z:" + chunk.getZ());
-		plugin.getChunkManager().restore(chunk);
+			plugin.getChunkManager().restore(chunk);
+			player.sendMessage("Restored chunk X:" + chunk.getX() + "/Z:" + chunk.getZ());
+			return;
+		} catch (IllegalArgumentException ex) {
+			sendErrorMessage(player, ex.getMessage());
+		}
 	}
 
 	private void infoCommand(Player player, String label, String [] args) {
