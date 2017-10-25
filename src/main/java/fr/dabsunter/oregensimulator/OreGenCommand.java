@@ -210,8 +210,9 @@ public class OreGenCommand implements CommandExecutor {
 				return;
 			}
 
-			plugin.getChunkManager().restore(chunk);
 			player.sendMessage("Restored chunk X:" + chunk.getX() + "/Z:" + chunk.getZ());
+			plugin.getChunkManager().restore(chunk);
+			player.sendMessage("Done.");
 			return;
 		} catch (IllegalArgumentException ex) {
 			sendErrorMessage(player, ex.getMessage());
